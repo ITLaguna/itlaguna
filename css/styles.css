@@ -1,122 +1,249 @@
-*{
-    box-sizing: border-box;
+/* =========================================================
+   Author : Herry Saptiawan
+   ========================================================= */
+
+
+/* =========================================================
+   1. RESET & GLOBAL SETUP
+   ========================================================= */
+
+/* Reset margin, padding, dan box model agar konsisten */
+* {
     margin: 0;
     padding: 0;
-    font-family: "Poppins", sans-serif;
-    font-weight: 600;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   2. FONT FACE (OFFLINE GOOGLE FONTS)
+   ========================================================= */
+
+/* Font Countdown - Roboto Mono Regular */
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("../fonts/RobotoMono-Regular.woff2") format("woff2");
+    font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
-html, body{
-    height: 100%;
-    margin: 0;
+/* Font Countdown - Roboto Mono Bold */
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("../fonts/RobotoMono-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
 }
 
-body{
-    align-items: center;
-    background-color: #000;
+/* Font Happy New Year Title */
+@font-face {
+    font-family: "Bonheur Royale";
+    src: url("../fonts/BonheurRoyale-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Font Tahun Baru (Angka Tahun) */
+@font-face {
+    font-family: "Bangers";
+    src: url("../fonts/Bangers-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* =========================================================
+   3. BODY & LAYOUT UTAMA
+   ========================================================= */
+
+body {
+    font-family: "Roboto Mono", monospace;
     display: flex;
-
-}
-
-.container{
-    color: #F5F7F8;
-    background: rgba(0, 0, 0, 0.5);
-    margin: 0 auto;
-    text-align: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    
-}
-
-/*TEXT "HAPPY NEW YEAR"*/
-.newYearText{
-    letter-spacing: .2rem;
-    text-transform: uppercase;
-    font-size: 5rem;
-    z-index: 100;
-    padding-top: 2em;
-}
-
-/*TEXT "Cheer to new beginnings,"*/
-.capNewYearText{
-    letter-spacing: .25rem;
-    text-transform: uppercase;
-    font-size: 2.5rem;
-    z-index: 100;
-    line-height: 4rem;
-}
-
-/*TEXT YEARS*/
-.yearText{
-    font-size: 15rem;
-    z-index: 100;
-}
-
-/*TIMER COUNTER*/
-.timerCount {
-    width: 200px;
+    align-items: center;
+    height: 100vh;
+    color: whitesmoke;
     text-align: center;
-    display: block;
-    font-size: 8rem;
-    z-index: 100;
-    text-align : center;
-    padding-top: 0.5em;
+    font-weight: 700;
 }
 
-/*TEXT TIMER*/
-.timerText{
-    display: inline-block;
-    font-size: 1.5rem;
-    list-style-type:none ;
-    padding: 1em;
-    text-transform: uppercase;
-    z-index: 100;
-    text-align :center;
-}
 
-/*SECOND ONLY*/
-.timerCount_second span{
-    font-size: 30rem;
-    z-index: 100;
-    text-align: center;
-}
-.timerCount_second{
-    width: 750px;
-    text-align: center;
-}
+/* =========================================================
+   4. BACKGROUND / FIREWORKS
+   ========================================================= */
 
-/*FOOTER*/
-footer{
-    width: 100%;
-    color: #F5F7F8; 
-    display: grid;
-    place-items: center;
-    padding-bottom: 8em; 
-    padding-top: 2em;
-    font-size: 1.2rem;
-}
-.sticky-footer{
-    position: sticky;
-    top: 100%;
-}
-
-/*FIREWORKS*/
 .fireworks-container {
+    background-image: url('../assets/bg.jpg');
     position: fixed;
-    left: 0;
-    top: 0;
     width: 100%;
     height: 100%;
-    background-position: bottom left;
+    background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-	z-index: -1;
+    z-index: -1;
+}
+
+/* Overlay (jika digunakan) */
+.overlay {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 1);
+}
+
+
+/* =========================================================
+   5. COUNTDOWN TIMER
+   ========================================================= */
+
+#countdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    font-size: 15rem;
+    position: fixed;
+}
+
+/* Angka countdown */
+.timerCount {
+    letter-spacing: -0.07em;
+    font-kerning: normal;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+/* Wrapper waktu (hari, jam, menit, detik) */
+.time {
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+/* Label teks waktu */
+.time p {
+    font-size: 2rem;
+}
+
+
+/* =========================================================
+   6. TEKS JUDUL
+   ========================================================= */
+
+/* Teks "Happy New Year" */
+#happy-new-year h1 {
+    font-family: "Bonheur Royale", cursive;
+    font-size: 10rem;
+    font-weight: 400;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Angka Tahun Baru */
+#new-year-year {
+    font-family: "Bangers", cursive;
+    font-size: 25rem;
+    font-weight: 400;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+
+/* =========================================================
+   7. ANIMASI
+   ========================================================= */
+
+/* Animasi scale + opacity */
+.scale {
+    animation: scaleOpacityAnimation 1s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+    animation-fill-mode: both;
+    transform-origin: center;
+}
+
+/* Keyframes scale */
+@keyframes scaleOpacityAnimation {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    90% {
+        transform: scale(1.25);
+    }
+    100% {
+        transform: scale(1.25);
+        opacity: 1;
+    }
+}
+
+/* Animasi fade in */
+.fadeIn {
+    animation: fadeInAnimation 2s ease-in-out normal;
+}
+
+/* Keyframes fade in */
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+/* =========================================================
+   8. RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 1200px) {
+    #new-year-year {
+        font-size: 20rem;
+    }
+    #countdown-container {
+        font-size: 8rem;
+        gap: 80px;
+    }
+    #happy-new-year h1 {
+        font-size: 8rem;
+    }
+    .time p {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #new-year-year {
+        font-size: 15rem;
+    }
+    #countdown-container {
+        font-size: 5rem;
+        gap: 30px;
+    }
+    #happy-new-year h1 {
+        font-size: 6rem;
+    }
+    .time p {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #new-year-year {
+        font-size: 10rem;
+    }
+    #countdown-container {
+        font-size: 5rem;
+        flex-direction: column;
+        gap: 30px;
+    }
+    #happy-new-year h1 {
+        font-size: 4rem;
+    }
+    .time p {
+        font-size: 1.5rem;
+    }
 }

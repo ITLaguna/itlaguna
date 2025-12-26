@@ -1,48 +1,124 @@
+<!-- =====================================================
+    Author: Herry Saptiawan 
+    ===================================================== -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- =====================================================
+         META DASAR DOKUMEN
+         ===================================================== -->
+
+    <!-- Encoding karakter UTF-8 -->
+    <meta charset="UTF-8"> 
+
+    <!-- Membuat layout responsif di semua device -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+    <!-- Judul halaman -->
     <title>NEW YEAR COUNTDOWN</title>
-	<link rel="icon" href="assets/logo.jpg">
-    <link rel="stylesheet" href="css/styles.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet"
-    />
+
+    <!-- Favicon website -->
+    <link rel="icon" href="assets/logo.jpg"> 
+    
+    <!-- =====================================================
+         CSS UTAMA
+         ===================================================== -->
+
+    <!-- Stylesheet utama (font, layout, animasi) -->
+    <link rel="stylesheet" href="css/styles.css"> 
+
 </head>
-    <body>
-        <div class="container">
-            <h1 class="newYearText" id="textSpawn" style="display: none;">HAPPY NEW YEAR</h1>
-            <h2 class="capNewYearText" id="capTextSpawn" style="display: block;">Cheer to new beginnings, joyous moments, <br> and unforgettable memories in the coming year! <br></h2>
-            <div id="countdown">                
-                <div id="full">
-                    <div class="timerText" id="days"><span id="digitDays" class="timerCount"></span>DAYS</div>
-                    <div class="timerText" id="hours"><span id="digitHours" class="timerCount"></span>HOURS</div>
-                    <div class="timerText" id="minutes"><span id="digitMinutes" class="timerCount"></span>MINUTES</div>
-                    <div class="timerText" id="seconds"><span id="digitSeconds" class="timerCount"></span>SECONDS</div>
-                </div>
-                
-                <div id="half" style="display: none;">
-                    <div class="timerCount_second"><span id="digitSeconds_2"></span></div>
-                </div>                
-            </div>
-            <div id="year_text" class="yearText" style="display: none;">
-                <span>0000</span>
-            </div> 
-       
-            <footer class="sticky-footer">
-                <img src="https://cache.marriott.com/marriottassets/marriott/DPSLC/Logo/dpslc_logo_L.png" height="150">
-            </footer>
-            
-        </div>   
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.0.4/gsap.min.js"></script>
-        <div class="fireworks-container" style="background-image: url(./assets/bg.jpg);"></div>
-        <script src="./js/fireworks.js"></script>
-        <script src="./js/app.js"></script>         
-    </body>
+<body>
 
+    <!-- =====================================================
+         COUNTDOWN TIMER
+         ===================================================== -->
 
+    <!-- Container utama countdown -->
+    <div id="countdown-container">
+
+        <!-- Countdown hari -->
+        <div class="time" id="days">
+            <span id="days-num" class="timerCount"></span>
+            <p>DAYS</p>
+        </div>
+
+        <!-- Countdown jam -->
+        <div class="time" id="hours">
+            <span id="hours-num" class="timerCount"></span>
+            <p>HOURS</p>
+        </div>
+
+        <!-- Countdown menit -->
+        <div class="time" id="minutes">
+            <span id="minutes-num" class="timerCount"></span>
+            <p>MINUTES</p>
+        </div>
+
+        <!-- Countdown detik -->
+        <div class="time" id="seconds">
+            <span id="seconds-num" class="timerCount"></span>
+            <p>SECONDS</p>
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         TAMPILAN SETELAH COUNTDOWN SELESAI
+         ===================================================== -->
+
+    <!-- Pesan Happy New Year (disembunyikan di awal) -->
+    <div id="happy-new-year" style="display: none;">
+        <h1>Happy New Year!</h1>
+        <p id="new-year-year"></p>
+    </div>
+
+    <!-- =====================================================
+         LIBRARY (TIDAK DIGUNAKAN)
+         ===================================================== -->
+
+    <!-- GSAP tidak digunakan dalam kode JavaScript -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.0.4/gsap.min.js"></script> -->
+
+    <!-- =====================================================
+         FIREWORKS BACKGROUND
+         ===================================================== -->
+
+    <!-- Container canvas kembang api -->
+    <div class="fireworks-container" id="fireworks-container">
+        <div class="overlay"></div>
+    </div>
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <!-- Library fireworks (canvas animation) -->
+    <script src="js/fireworks.js"></script>
+
+    <!-- Script utama countdown -->
+    <script src="js/app.js"></script>
+
+    <!-- Plugin fireworks berbasis jQuery -->
+    <script src="jquery.fireworks.js"></script>
+
+    <!-- jQuery (dependency untuk plugin fireworks) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+    <!-- =====================================================
+         INISIALISASI FIREWORKS (jQuery)
+         ===================================================== -->
+
+    <script>
+        $(".fireworks-container").fireworks({
+            sound: true,     // Aktifkan suara ledakan
+            width: "100%",   // Lebar penuh layar
+            height: "100%",  // Tinggi penuh layar
+            opacity: 0.3     // Transparansi efek
+        });
+    </script>
+
+</body>
 </html>
