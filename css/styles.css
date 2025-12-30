@@ -204,6 +204,16 @@ body {
     }
 }
 
+@keyframes finalPulse {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+.final-seconds {
+    animation: finalPulse 0.95s ease-out infinite;
+}
+
 /* =========================================================
    8. ANIMASI GLOBAL
    ========================================================= */
