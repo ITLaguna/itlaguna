@@ -6,6 +6,7 @@
 // =====================================
 // KONSTANTA WAKTU (dalam milidetik)
 // =====================================
+// Digunakan untuk konversi waktu countdown
 const second = 1000,        // 1 detik = 1000 ms
       minute = second * 60, // 1 menit = 60 detik
       hour   = minute * 60, // 1 jam = 60 menit
@@ -15,32 +16,38 @@ const second = 1000,        // 1 detik = 1000 ms
 // =====================================
 // AMBIL ELEMEN DOM YANG DIBUTUHKAN
 // =====================================
-const fireworkContainer = document.querySelector('.fireworks-container'), // Container kembang api
-      newYear = document.querySelector('#new-year-year');                  // Elemen teks tahun baru
+// Container animasi kembang api
+const fireworkContainer = document.querySelector('.fireworks-container'),
+      // Elemen teks untuk menampilkan tahun baru (2025, 2026, dst)
+      newYear = document.querySelector('#new-year-year');
 
 
 // =====================================
 // SET TANGGAL TARGET TAHUN BARU
 // =====================================
 
-// Mode TESTING
-// let new_year = "December 26, 2025 14:44:40"; // Tanggal target New Year
+// Mode TESTING (untuk debug / demo)
+// let new_year = "December 20, 2025 19:07:30";
 
-// Mode PRODUKSI
-let new_year = "January 01, 2026 00:00:00"; // Tanggal resmi tahun baru
+// Mode PRODUKSI (aktifkan saat live)
+let new_year = "January 01, 2026 00:00:00";
 
 
 // =====================================
 // MENENTUKAN TAHUN BARU SECARA OTOMATIS
 // =====================================
-const comingYear = new Date(new_year).getFullYear(); // Ambil tahun dari tanggal target
-newYear.innerHTML = comingYear;                      // Tampilkan tahun baru ke halaman
+// Ambil angka tahun dari tanggal target
+const comingYear = new Date(new_year).getFullYear();
+
+// Tampilkan tahun ke elemen HTML
+newYear.innerHTML = comingYear;
 
 
 // =====================================
 // HITUNG WAKTU COUNTDOWN
 // =====================================
-const countDown = new Date(new_year).getTime(); // Konversi tanggal target ke timestamp
+// Konversi tanggal target ke timestamp (ms)
+const countDown = new Date(new_year).getTime();
 
 
 // =====================================
@@ -48,8 +55,10 @@ const countDown = new Date(new_year).getTime(); // Konversi tanggal target ke ti
 // =====================================
 const interval = setInterval(function () {
 
-    // Waktu sekarang & selisih waktu menuju tahun baru
+    // Ambil waktu sekarang
     let now = new Date().getTime(),
+
+        // Selisih waktu menuju tahun baru
         distance = countDown - now;
 
     // ---------------------------------
@@ -63,6 +72,7 @@ const interval = setInterval(function () {
     // ---------------------------------
     // UPDATE TAMPILAN COUNTDOWN
     // ---------------------------------
+    // Format angka agar selalu 2 digit
     document.getElementById('days-num').innerText    = days < 10 ? '0' + days : days;
     document.getElementById('hours-num').innerText   = hours < 10 ? '0' + hours : hours;
     document.getElementById('minutes-num').innerText = minutes < 10 ? '0' + minutes : minutes;
@@ -86,11 +96,17 @@ const interval = setInterval(function () {
     // SEMBUNYIKAN MENIT JIKA < 1 MENIT
     // ---------------------------------
     if (distance <= minute) {
+
+        // Hilangkan tampilan menit
         document.getElementById('minutes').style.display = "none";
+
+        // Reset animasi scale detik
         document.getElementById('seconds').classList.remove('scale');
+
+        // Perbesar angka detik di akhir countdown
         document.getElementById('seconds-num').style.fontSize = '35rem';
 
-        // Sembunyikan label teks (DAYS, HOURS, dll)
+        // Sembunyikan semua label teks (DAYS, HOURS, MINUTES, SECONDS)
         document.querySelectorAll('.time p').forEach(p => p.style.display = 'none');
     }
 
@@ -98,29 +114,54 @@ const interval = setInterval(function () {
     // ANIMASI DETIK 10 DETIK TERAKHIR
     // ---------------------------------
     if (distance <= second * 10 && distance > 0) {
+
+        // Update angka detik
         document.getElementById('seconds-num').innerText = seconds;
+
+        // Aktifkan animasi scale (zoom)
         document.getElementById('seconds').classList.add('scale');
     }
-
-//     if (distance === 0) {
-//     document.getElementById('seconds').classList.remove('scale');
-// }
 
     // ---------------------------------
     // SAAT COUNTDOWN SELESAI
     // ---------------------------------
     if (distance <= 0) {
-        document.getElementById('seconds').classList.remove('scale');
-        document.getElementById('seconds').style.opacity = '0';
-        document.getElementById('happy-new-year').classList.add('fadeIn');
-        document.getElementById("countdown-container").style.display = "none";
-        document.getElementById("happy-new-year").style.display = "block";
 
-        fireworks.start();      // Jalankan animasi kembang api
-        clearInterval(interval); // Hentikan countdown
+        // Sembunyikan container countdown
+        document.getElementById("countdown-container").style.display = "none";
+
+        // Tampilkan container tahun baru
+        newYear.style.display = "block";
+        newYear.innerHTML = "";
+
+        // Konversi tahun menjadi string (misal "2025")
+        const yearString = comingYear.toString();
+
+        // Delay animasi antar digit
+        const delayPerDigit = 180;
+
+        // Pecah setiap digit menjadi span terpisah
+        yearString.split("").forEach((digit, index) => {
+            const span = document.createElement("span");
+            span.textContent = digit;
+
+            // Delay animasi per digit (efek muncul satu-satu)
+            span.style.animationDelay = `${index * delayPerDigit}ms`;
+            newYear.appendChild(span);
+        });
+
+        // Mulai animasi kembang api
+        fireworks.start();
+
+        // Tampilkan teks "Happy New Year"
+        document.getElementById('happy-new-year').style.display = "block";
+        document.getElementById('happy-new-year').classList.add('fadeIn');
+
+        // Hentikan interval countdown
+        clearInterval(interval);
     }
 
-}, 1000); // Update setiap 1 detik
+}, 1000); // Interval update setiap 1 detik
 
 
 // =====================================
@@ -148,9 +189,9 @@ const fireworks = new Fireworks(fireworkContainer, {
   gravity: 1.5,     // Gravitasi partikel
 
   // ✨ Efek visual
-  opacity: 0.5,     // Efek glow / transparansi
+  opacity: 0.5,     // Intensitas glow / transparansi
   hue: {
     min: 0,
-    max: 360        // Warna acak (pelangi)
+    max: 360        // Warna acak (full spectrum)
   }
 });
