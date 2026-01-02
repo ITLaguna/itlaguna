@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer</title>
+
+<!-- FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100..700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   BODY & CONTAINER
+========================= */
+body {
+    background: radial-gradient(circle at top, #1c1c1c, #0e0e0e);
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: "Roboto Mono", monospace;
+}
+
+.container {
+    padding: 48px 56px;
+    border-radius: 22px;
+    text-align: center;
+    background: linear-gradient(180deg, #1b1b1b, #121212);
+    box-shadow: 0 20px 60px rgba(0,0,0,.7), inset 0 0 0 1px rgba(255,255,255,.04);
+}
+
+h1 {
+    font-size: 2.4em;
+    margin-bottom: 45px;
+    letter-spacing: 2px;
+    opacity: .9;
+}
+
+label {
+    font-size: 1em;
+    margin-top: 22px;
+    display: block;
+    opacity: .85;
+}
+
+/* =========================
+   INPUTS & SELECT
+========================= */
+select,
+input[type="number"],
+input[type="datetime-local"],
+input[type="text"] {
+    margin-top: 10px; /* jarak atas agar rapi */
+}
+
+.input-section input[type="number"],
+.input-section input[type="datetime-local"],
+.input-section input[type="text"],
+.input-section select {
+    padding: 12px 14px;
+    font-size: 1.05em;
+    border-radius: 10px;
+    border: none;
+    background: #1a1a1a;
+    color: #ffffff;
+    box-shadow: inset 0 0 6px rgba(255,255,255,0.1);
+    box-sizing: border-box;
+    text-align: center;
+    width: 250px; /* lebar sama dengan HH/MM/SS */
+    height: 48px;
+}
+
+/* focus effect */
+.input-section input:focus,
+.input-section select:focus {
+    box-shadow: 0 0 12px rgba(45, 143, 85, 0.5);
+    outline: none;
+}
+
+/* jarak antar baris input & label */
+.input-section {
+    gap: 20px; 
+}
+
+/* =========================
+   INPUT GROUP (HH/MM/SS)
+========================= */
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px; /* jarak antar HH/MM/SS */
+    margin-top: 8px;
+}
+
+.input-group div {
+    width: 250px; /* sama dengan input di atas */
+}
+
+/* =========================
+   BUTTON
+========================= */
+button {
+    background: linear-gradient(135deg, #2d8f55, #1e6b3e);
+    color: #ffffff;
+    padding: 15px;
+    font-size: 1.15em;
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    margin-top: 26px;
+    letter-spacing: 1px;
+    transition: transform .15s ease, box-shadow .15s ease;
+    box-shadow: 0 0 12px rgba(45, 143, 85, 0.5);
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(45, 143, 85, 0.7);
+}
+
+/* =========================
+   COUNTDOWN DISPLAY
+========================= */
+#countdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+#countdown {
+    font-size: 10.5em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: inline-block;
+    position: relative;
+    line-height: 1;
+    text-align: center;
+    color: #ffffff;
+    text-shadow:
+        0 0 6px rgba(255,255,255,0.4),
+        0 0 12px rgba(255,255,255,0.3);
+}
+
+.dim {
+    color: #555555 !important;
+    text-shadow: none !important;
+}
+
+.separator {
+    margin: 0 14px;
+    opacity: .65;
+}
+
+.blink {
+    animation: pulse 1s infinite;
+    color: #ff3b3b !important;
+    text-shadow:
+        0 0 8px rgba(255,59,59,0.7),
+        0 0 16px rgba(255,59,59,0.5);
+}
+
+@keyframes pulse {
+    0%   { opacity: .7; }
+    50%  { opacity: 1;  }
+    100% { opacity: .7; }
+}
+
+/* =========================
+   ERROR MESSAGE
+========================= */
+#error-message {
+    font-size: 1.1em;
+    color: #ff5c5c;
+    margin-top: 18px;
+    letter-spacing: 1px;
+}
+
+/* =========================
+   RESUME MODAL
+========================= */
+#resumeModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.65);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+#resumeModal .modal-box {
+    background: linear-gradient(180deg, #1c1c1c, #121212);
+    padding: 36px 42px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,.8);
+}
+
+#resumeModal button {
+    margin-top: 18px;
+}
+
+.modal-box {
+    animation: drop 0.25s ease-out;
+}
+
+@keyframes drop {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- JUDUL -->
+    <h1 id="title">Countdown Timer</h1>
+
+    <!-- INPUT SECTION -->
+    <div class="input-section">
+
+        <!-- MODE SELECTION -->
+        <label>Mode</label>
+        <select id="mode" onchange="toggleMode()">
+            <option value="duration">Time Duration</option>
+            <option value="date">Target Date & Time</option>
+        </select>
+
+        <!-- TIME DURATION INPUT -->
+        <div id="durationBox">
+            <div class="input-group">
+                <div><input type="number" id="h" placeholder="HH"></div>
+                <div><input type="number" id="m" placeholder="MM"></div>
+                <div><input type="number" id="s" placeholder="SS"></div>
+            </div>
+        </div>
+
+        <!-- TARGET DATE INPUT -->
+        <div id="dateBox" style="display:none">
+            <input type="datetime-local" id="target">
+        </div>
+
+        <!-- TIMEOUT MESSAGE -->
+        <label>Message when time is up</label>
+        <input type="text" id="timeoutMsg" value="TIME'S UP">
+
+        <!-- ERROR MESSAGE -->
+        <div id="error-message"></div>
+
+        <!-- START BUTTON -->
+        <button onclick="start()">Start</button>
+    </div>
+
+    <!-- COUNTDOWN DISPLAY -->
+    <div id="countdown-container">
+        <div id="countdown"></div>
+    </div>
+
+</div>
+
+<!-- RESUME MODAL -->
+<div id="resumeModal" class="modal">
+    <div class="modal-box">
+        <h3>Resume previous timer?</h3>
+        <div class="modal-actions">
+            <button onclick="resume()">Resume</button>
+            <button onclick="newTimer()">New</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+let interval;
+let totalSec;
+
+// Ambil DOM
+const countdownContainer = document.getElementById("countdown-container");
+const countdown = document.getElementById("countdown");
+const h = document.getElementById("h");
+const m = document.getElementById("m");
+const s = document.getElementById("s");
+const mode = document.getElementById("mode");
+const errorMessage = document.getElementById("error-message");
+const resumeModal = document.getElementById("resumeModal");
+
+/* =========================
+   TOGGLE MODE
+========================= */
+function toggleMode() {
+    const modeVal = mode.value;
+    const durationBox = document.getElementById("durationBox");
+    const dateBox = document.getElementById("dateBox");
+
+    if (modeVal === "duration") {
+        durationBox.style.display = "block";
+        dateBox.style.display = "none";
+    } else {
+        durationBox.style.display = "none";
+        dateBox.style.display = "block";
+    }
+}
+
+/* =========================
+   START TIMER
+========================= */
+function start(fromResume = false) {
+    clearInterval(interval);
+    errorMessage.textContent = "";
+
+    // sembunyikan input & judul
+    document.querySelector(".input-section").style.display = "none";
+    document.getElementById("title").style.display = "none";
+    countdownContainer.style.display = "block";
+
+    const message = document.getElementById("timeoutMsg").value || "TIME'S UP";
+
+    if (!fromResume) {
+        if (mode.value === "duration") {
+            const hh = Math.max(0, +h.value || 0);
+            const mm = Math.max(0, +m.value || 0);
+            const ss = Math.max(0, +s.value || 0);
+            totalSec = hh*3600 + mm*60 + ss;
+            if (totalSec <= 0) {
+                errorMessage.textContent = "Please enter a valid duration";
+                document.querySelector(".input-section").style.display = "block";
+                document.getElementById("title").style.display = "block";
+                countdownContainer.style.display = "none";
+                return;
+            }
+            const endTime = Date.now() + totalSec*1000;
+            localStorage.setItem("endTime", endTime);
+        } else {
+            const t = document.getElementById("target").value;
+            if (!t) {
+                errorMessage.textContent = "Please select a valid date/time";
+                return;
+            }
+            const endTime = new Date(t).getTime();
+            totalSec = Math.ceil((endTime - Date.now())/1000);
+            if (totalSec <= 0) {
+                errorMessage.textContent = "Date/time must be in the future";
+                return;
+            }
+            localStorage.setItem("endTime", endTime);
+        }
+        localStorage.setItem("timeoutMsg", message);
+    } else {
+        const endTime = +localStorage.getItem("endTime");
+        totalSec = Math.ceil((endTime - Date.now())/1000);
+    }
+
+    updateDisplay(totalSec); // tampil detik awal
+
+    interval = setInterval(() => {
+        totalSec--;
+        if (totalSec < 0) {
+            clearInterval(interval);
+            countdown.innerHTML = localStorage.getItem("timeoutMsg") || message;
+            countdown.classList.add("blink");
+            localStorage.removeItem("endTime");
+            return;
+        }
+        updateDisplay(totalSec);
+    }, 1000);
+}
+
+/* =========================
+   UPDATE DISPLAY
+========================= */
+function updateDisplay(sec) {
+    const hh = Math.floor(sec / 3600);
+    const mm = Math.floor((sec % 3600) / 60);
+    const ss = sec % 60;
+
+    // Dim logic
+    const hDim = hh === 0 ? 'dim' : '';
+    const mDim = hh === 0 && mm === 0 ? 'dim' : '';
+    const sDim = '';
+    const sepH = `<span class="separator ${hDim}">:</span>`;
+    const sepM = `<span class="separator ${mDim}">:</span>`;
+
+    const hSpan = `<span class="${hDim}">${String(hh).padStart(2,"0")}</span>`;
+    const mSpan = `<span class="${mDim}">${String(mm).padStart(2,"0")}</span>`;
+    const sSpan = `<span class="${sDim}">${String(ss).padStart(2,"0")}</span>`;
+
+    countdown.innerHTML = [hSpan, sepH, mSpan, sepM, sSpan].join('');
+}
+
+/* =========================
+   TIMES UP
+========================= */
+function timesUp() {
+    countdown.innerHTML = localStorage.getItem("timeoutMsg") || "TIME'S UP";
+    countdown.classList.add("blink");
+}
+
+/* =========================
+   RESUME / NEW TIMER
+========================= */
+function resume() {
+    resumeModal.style.display = "none";
+    start(true);
+}
+
+function newTimer() {
+    localStorage.removeItem("endTime");
+    localStorage.removeItem("timeoutMsg");
+    location.reload();
+}
+
+/* =========================
+   ON LOAD: CEK TIMER SEBELUMNYA
+========================= */
+window.onload = () => {
+    const savedEnd = localStorage.getItem("endTime");
+    if (!savedEnd) return;
+
+    const timeLeft = Math.ceil((+savedEnd - Date.now()) / 1000);
+    if (timeLeft <= 0) {
+        localStorage.removeItem("endTime");
+        return;
+    }
+
+    // sembunyikan input & judul sebelum tampilkan modal
+    document.querySelector(".input-section").style.display = "none";
+    document.getElementById("title").style.display = "none";
+
+    countdownContainer.style.display = "block"; // timer jalan di belakang modal
+    updateDisplay(timeLeft);
+
+    resumeModal.style.display = "flex"; // tampilkan modal
+
+    // jalankan timer di belakang modal supaya waktu tetap jalan
+    interval = setInterval(() => {
+        const left = Math.ceil((+savedEnd - Date.now()) / 1000);
+        if (left <= 0) {
+            clearInterval(interval);
+            countdown.innerHTML = localStorage.getItem("timeoutMsg") || "TIME'S UP";
+            countdown.classList.add("blink");
+            localStorage.removeItem("endTime");
+            resumeModal.style.display = "none";
+            return;
+        }
+        updateDisplay(left);
+    }, 1000);
+};
+
+/* =========================
+   CEGAH INPUT NEGATIF
+========================= */
+document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('input', () => {
+        if (input.value === '' || Number(input.value) < 0) input.value = 0;
+    });
+});
+</script>
+
+</body>
+</html>
